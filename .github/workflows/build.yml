@@ -37,7 +37,8 @@ jobs:
       - name: Build B repository
         run: |
           pushd build
-          ./compile.sh build BOARD=rock-4b BRANCH=current BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no RELEASE=jammy
+          ./compile.sh build BOARD=rock-4b BRANCH=current BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no RELEASE=jammy COMPRESS_OUTPUTIMAGE=sha,img,7z
+          ls -lh output/images
           popd
           df -hT ${PWD}
 
