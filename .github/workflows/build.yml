@@ -42,11 +42,9 @@ jobs:
       - name: Build [ ${{ inputs.board }} ]
         run: |
           pushd build
-          mkdir -p build/output/images
-          touch build/output/images/a.txt
-          touch build/output/images/b.txt
-          pwd
-          pwd -P
+          mkdir -p output/images
+          touch output/images/a.txt
+          touch output/images/b.txt
           popd
           pwd
           pwd -P
@@ -60,10 +58,9 @@ jobs:
         run: |
           ls -la
           pwd
-          pwd -P
           ls -lh ${{ github.workspace }}/build/output/images
           pwd
-          pwd -P
+          echo "workspace: ${{ github.workspace }}"
 
       - name: Upload images
         uses: ncipollo/release-action@main
