@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout
+      - name: Checkout targets
         uses: actions/checkout@v2
 
       - name: Install required packages
@@ -30,11 +30,11 @@ jobs:
           df -hT ${PWD}
           git clone -q --single-branch --depth=1 --branch=main https://github.com/armbian/build.git
 
-      - name: Copy userpatches
+      - name: Copy targets
         run: |
           cp -rvf userpatches build/
 
-      - name: Build B repository
+      - name: Build
         run: |
           pushd build
           ./compile.sh build BOARD=rock-4b BRANCH=current BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no RELEASE=jammy COMPRESS_OUTPUTIMAGE=sha,img,7z
