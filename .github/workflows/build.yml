@@ -31,7 +31,7 @@ jobs:
           sudo apt update
           sudo apt install -y tree
 
-      - name: Checkout armbian [ ${{ inputs.board }} ]
+      - name: Checkout armbian
         run: |
           git clone -q --single-branch --depth=1 --branch=main https://github.com/armbian/build.git
 
@@ -39,7 +39,7 @@ jobs:
         run: |
           cp -rvf userpatches build/
 
-      - name: Build
+      - name: Build [ ${{ inputs.board }} ]
         run: |
           pushd build
           ./compile.sh build BOARD=${{ inputs.board }} \
@@ -59,6 +59,21 @@ jobs:
           ls -lh build/output/images
 
       - name: Upload images
-        uses: actions/upload-artifact@v4
+        if: success()
         with:
-          path: build/output/images/*
+          tag: test123
+          artifacts: "build/output/images/*"
+          allowUpdates: true
+          removeArtifacts: false
+          replacesArtifacts: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            ### Armbian Image information
+            - Default username: root
+            - Default password: 1234
+            - Install command: armbian-install
+            - Update command: armbian-update
+            ### Armbian Image Verification
+              - sha256sum
+          draft: false
+          prerelease: false
