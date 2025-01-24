@@ -50,6 +50,7 @@ jobs:
           popd
           pwd
           pwd -P
+          ls -la
 
       - name: Show remaining space
         run: |
@@ -57,6 +58,7 @@ jobs:
 
       - name: Show images
         run: |
+          ls -la
           pwd
           pwd -P
           ls -lh ${{ github.workspace }}/build/output/images
