@@ -3,8 +3,8 @@ name: Build
 on:
   workflow_dispatch:
     inputs:
-      boards:
-        description: 'Target board.'
+      board:
+        description: 'Target board'
         type: choice
         options:
           - all
@@ -24,14 +24,14 @@ jobs:
           df -hT ${PWD}
 
       - name: Checkout targets
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install required packages
         run: |
           sudo apt update
           sudo apt install -y tree
 
-      - name: Checkout armbian
+      - name: Checkout armbian [ ${{ inputs.board }} ]
         run: |
           git clone -q --single-branch --depth=1 --branch=main https://github.com/armbian/build.git
 
@@ -42,7 +42,8 @@ jobs:
       - name: Build
         run: |
           pushd build
-          ./compile.sh build BOARD=rock-4b BRANCH=current \
+          ./compile.sh build BOARD=${{ inputs.board }} \
+          BRANCH=current \
           BUILD_DESKTOP=no BUILD_MINIMAL=yes \
           KERNEL_CONFIGURE=no \
           RELEASE=bookworm \
@@ -60,4 +61,4 @@ jobs:
       - name: Upload images
         uses: actions/upload-artifact@v4
         with:
-          path: build/output/images
+          path: build/output/images/*
