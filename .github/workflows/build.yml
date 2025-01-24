@@ -63,7 +63,7 @@ jobs:
         if: success()
         with:
           tag: test123
-          artifacts: "build/output/images/*"
+          artifacts: "${{ github.workspace }}/build/output/images/*"
           allowUpdates: true
           removeArtifacts: false
           replacesArtifacts: true
