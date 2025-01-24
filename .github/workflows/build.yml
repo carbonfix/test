@@ -17,6 +17,12 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      - name: Show host info
+        run: |
+          lscpu
+          free -h
+          df -hT ${PWD}
+
       - name: Checkout targets
         uses: actions/checkout@v2
 
@@ -27,7 +33,6 @@ jobs:
 
       - name: Checkout armbian
         run: |
-          df -hT ${PWD}
           git clone -q --single-branch --depth=1 --branch=main https://github.com/armbian/build.git
 
       - name: Copy targets
@@ -37,8 +42,7 @@ jobs:
       - name: Build
         run: |
           pushd build
-          ./compile.sh build BOARD=rock-4b BRANCH=current BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no RELEASE=jammy COMPRESS_OUTPUTIMAGE=sha,img,7z
+          ./compile.sh build BOARD=rock-4b BRANCH=current BUILD_DESKTOP=no BUILD_MINIMAL=yes KERNEL_CONFIGURE=no RELEASE=bookworm COMPRESS_OUTPUTIMAGE=sha,img,7z
           ls -lh output/images
           popd
           df -hT ${PWD}
-
