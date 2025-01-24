@@ -57,12 +57,13 @@ jobs:
       - name: Show images
         run: |
           ls -lh ${{ github.workspace }}/build/output/images
+          echo "buildtime=$(date +"%Y.%m")" >> $GITHUB_ENV
 
       - name: Upload images
         uses: ncipollo/release-action@main
         if: success()
         with:
-          tag: test123
+          tag: "test_${{ env.buildtime }}"
           artifacts: "${{ github.workspace }}/build/output/images/*"
           allowUpdates: true
           removeArtifacts: false
