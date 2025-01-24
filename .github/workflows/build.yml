@@ -1,4 +1,4 @@
-name: Build and Configure
+name: Build
 
 on:
   workflow_dispatch:
