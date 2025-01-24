@@ -43,6 +43,8 @@ jobs:
         run: |
           pushd build
           ./compile.sh build BOARD=rock-4b BRANCH=current BUILD_DESKTOP=no BUILD_MINIMAL=yes KERNEL_CONFIGURE=no RELEASE=bookworm COMPRESS_OUTPUTIMAGE=sha,img,7z
-          ls -lh output/images
           popd
           df -hT ${PWD}
+
+      - name: Show images
+          ls -lh build/output/images
