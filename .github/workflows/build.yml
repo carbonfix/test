@@ -8,7 +8,7 @@ on:
         type: choice
         options:
           - all
-          - sapphire-air
+          - rockchip-sapphire
           - rock-4b
         default: "all"
 
@@ -42,11 +42,13 @@ jobs:
       - name: Build [ ${{ inputs.board }} ]
         run: |
           pushd build
-          mkdir -p output/images
-          touch output/images/a.txt
-          touch output/images/b.txt
+          ./compile.sh build BOARD=${{ inputs.board }} \
+          BRANCH=current \
+          BUILD_DESKTOP=no BUILD_MINIMAL=yes \
+          KERNEL_CONFIGURE=no \
+          RELEASE=bookworm \
+          COMPRESS_OUTPUTIMAGE=sha,img,xz
           popd
-          ls -la
 
       - name: Show remaining space
         run: |
