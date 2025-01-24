@@ -42,7 +42,14 @@ jobs:
       - name: Build [ ${{ inputs.board }} ]
         run: |
           pushd build
+          mkdir -p build/output/images
+          touch build/output/images/a.txt
+          touch build/output/images/b.txt
+          pwd
+          pwd -P
           popd
+          pwd
+          pwd -P
 
       - name: Show remaining space
         run: |
