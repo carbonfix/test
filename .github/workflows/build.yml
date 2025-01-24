@@ -42,8 +42,11 @@ jobs:
       - name: Build
         run: |
           pushd build
-          ./compile.sh build BOARD=rock-4b BRANCH=current BUILD_DESKTOP=no BUILD_MINIMAL=yes KERNEL_CONFIGURE=no RELEASE=bookworm COMPRESS_OUTPUTIMAGE=sha,img,7z
+          ./compile.sh build BOARD=rock-4b BRANCH=current BUILD_DESKTOP=no BUILD_MINIMAL=yes KERNEL_CONFIGURE=no RELEASE=bookworm PREFER_DOCKER=no COMPRESS_OUTPUTIMAGE=sha,img,7z
           popd
+
+      - name: Show disk space
+        run: |
           df -hT ${PWD}
 
       - name: Show images
