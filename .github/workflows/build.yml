@@ -42,13 +42,22 @@ jobs:
       - name: Build
         run: |
           pushd build
-          ./compile.sh build BOARD=rock-4b BRANCH=current BUILD_DESKTOP=no BUILD_MINIMAL=yes KERNEL_CONFIGURE=no RELEASE=bookworm PREFER_DOCKER=no COMPRESS_OUTPUTIMAGE=sha,img,7z
+          ./compile.sh build BOARD=rock-4b BRANCH=current \
+          BUILD_DESKTOP=no BUILD_MINIMAL=yes \
+          KERNEL_CONFIGURE=no \
+          RELEASE=bookworm \
+          COMPRESS_OUTPUTIMAGE=sha,img,xz
           popd
 
-      - name: Show disk space
+      - name: Show remaining space
         run: |
           df -hT ${PWD}
 
       - name: Show images
         run: |
           ls -lh build/output/images
+
+      - name: Upload images
+        uses: actions/upload-artifact@v4
+        with:
+          path: build/output/images
