@@ -46,8 +46,6 @@ jobs:
           touch output/images/a.txt
           touch output/images/b.txt
           popd
-          pwd
-          pwd -P
           ls -la
 
       - name: Show remaining space
@@ -56,11 +54,7 @@ jobs:
 
       - name: Show images
         run: |
-          ls -la
-          pwd
           ls -lh ${{ github.workspace }}/build/output/images
-          pwd
-          echo "workspace: ${{ github.workspace }}"
 
       - name: Upload images
         uses: ncipollo/release-action@main
