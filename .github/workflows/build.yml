@@ -59,6 +59,7 @@ jobs:
           ls -lh build/output/images
 
       - name: Upload images
+        uses: ncipollo/release-action@main
         if: success()
         with:
           tag: test123
