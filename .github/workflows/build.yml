@@ -57,7 +57,7 @@ jobs:
 
       - name: Show images
         run: |
-          ls -lh build/output/images
+          ls -lh ${{ github.workspace }}/build/output/images
           pwd
           pwd -P
 
