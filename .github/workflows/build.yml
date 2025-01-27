@@ -27,19 +27,20 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      - name: Install required packages
+        run: |
+          sudo apt update
+          sudo apt install -y neofetch
+
       - name: Show host info
         run: |
           lscpu
           free -h
           df -hT ${PWD}
+          neofetch
 
       - name: Checkout targets
         uses: actions/checkout@v4
-
-      - name: Install required packages
-        run: |
-          sudo apt update
-          sudo apt install -y tree
 
       - name: Checkout armbian
         run: |
