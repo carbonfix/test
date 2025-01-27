@@ -9,8 +9,8 @@
 #include "rk3399-opp.dtsi"
 
 / {
-	model = "RK3399 Sapphire Air Board";
-	compatible = "rk3399,sapphire-air", "rockchip,rk3399";
+	model = "Rockchip RK3399 Sapphire Board";
+	compatible = "rk3399,rockchip-sapphire", "rockchip,rk3399";
 
 	aliases {
 		mmc0 = &sdmmc;
