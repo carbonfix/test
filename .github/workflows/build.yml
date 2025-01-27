@@ -5,12 +5,22 @@ on:
     inputs:
       board:
         description: 'Target board'
+        required: true
         type: choice
         options:
           - all
           - rockchip-sapphire
           - rock-4b
         default: "all"
+      release:
+        description: 'Release Version'
+        required: true
+        type: choice
+        options:
+          - bookworm
+          - jammy
+          - noble
+        default: bookworm
 
 jobs:
   build:
@@ -46,7 +56,7 @@ jobs:
           BRANCH=current \
           BUILD_DESKTOP=no BUILD_MINIMAL=yes \
           KERNEL_CONFIGURE=no \
-          RELEASE=bookworm \
+          RELEASE=${{ inputs.release }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz
           popd
 
