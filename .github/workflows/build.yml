@@ -89,7 +89,7 @@ jobs:
             echo "Setting up for desktop system..."
             SYSTEM_ARGS="BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ inputs.desktop }} \
                   DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
-                  DESKTOP_APPGROUPS_SELECTED=\'${{ env.DESKTOP_APPGROUPS }}\'"
+                  DESKTOP_APPGROUPS_SELECTED=\"${{ env.DESKTOP_APPGROUPS }}\""
           fi
 
           echo "SYSTEM_ARGS: $SYSTEM_ARGS"
