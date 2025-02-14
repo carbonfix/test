@@ -90,7 +90,7 @@ jobs:
                   DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
                   DESKTOP_APPGROUPS_SELECTED=\"${{ env.DESKTOP_APPGROUPS }}\"" >> $GITHUB_ENV
           fi
-          echo "BUILD_ARGS=${SYSTEM_ARGS}" >> $GITHUB_ENV
+          echo "BUILD_ARGS=$SYSTEM_ARGS" >> $GITHUB_ENV
 
       - name: Build [ ${{ inputs.board }} ]
         run: |
@@ -99,7 +99,7 @@ jobs:
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
           BRANCH=current \
-          ${BUILD_ARGS} \
+          $BUILD_ARGS \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ inputs.release }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz
