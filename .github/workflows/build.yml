@@ -75,7 +75,7 @@ jobs:
 
       - name: Set up system type
         env:
-          DESKTOP_APPGROUPS: ${{ "browsers chat desktop_tools editors email internet multimedia office programming remote_desktop" }}
+          DESKTOP_APPGROUPS: "browsers chat desktop_tools editors email internet multimedia office programming remote_desktop"
         run: |
           set -x
           if [ "${{ inputs.system }}" == "minimal" ]; then
