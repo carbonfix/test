@@ -73,12 +73,11 @@ jobs:
         run: |
           cp -rvf userpatches build/
 
-      - name: Build [ ${{ inputs.board }} - ${{ inputs.release }} - ${{ inputs.system }} ]
+      - name: Set up system type
         env:
           DESKTOP_APPGROUPS: "browsers chat desktop_tools editors email internet multimedia office programming remote_desktop"
         run: |
           set -x
-
           if [ "${{ inputs.system }}" == "minimal" ]; then
             echo "Setting up for minimal system..."
             SYSTEM_ARGS="BUILD_DESKTOP=no BUILD_MINIMAL=yes"
@@ -89,15 +88,19 @@ jobs:
             echo "Setting up for desktop system..."
             SYSTEM_ARGS="BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ inputs.desktop }} \
                   DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
-                  DESKTOP_APPGROUPS_SELECTED=\'${{ env.DESKTOP_APPGROUPS }}\'"
+                  DESKTOP_APPGROUPS_SELECTED=\"${{ env.DESKTOP_APPGROUPS }}\""
           fi
+          echo "BUILD_ARGS=$SYSTEM_ARGS" >> $GITHUB_ENV
 
-          echo "SYSTEM_ARGS: $SYSTEM_ARGS"
+      - name: Build [ ${{ inputs.board }} ]
+        run: |
+          set -x
 
+          echo "env.BUILD_ARGS: ${{ env.BUILD_ARGS }}"
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
           BRANCH=current \
-          $SYSTEM_ARGS \
+          ${{ env.BUILD_ARGS }} \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ inputs.release }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz
