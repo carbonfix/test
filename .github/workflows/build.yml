@@ -36,9 +36,8 @@ on:
         default: minimal
 
       desktop:
-        if: ${{ inputs.system == 'desktop' }}
-        description: 'Desktop Type'
-        required: true
+        description: 'Desktop Type (only applicable if system is desktop)'
+        required: false
         type: choice
         options:
           - xfce
