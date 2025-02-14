@@ -24,6 +24,16 @@ on:
           - noble
         default: bookworm
 
+      branch:
+        description: 'Branch'
+        required: true
+        type: choice
+        options:
+          - current
+          - edge
+          - vendor
+        default: current
+
       system:
         description: 'System Type'
         required: true
@@ -77,7 +87,6 @@ jobs:
         env:
           DESKTOP_APPGROUPS: "browsers chat desktop_tools editors email internet multimedia office programming remote_desktop"
         run: |
-          set -x
           if [ "${{ inputs.system }}" == "minimal" ]; then
             echo "Setting up for minimal system..."
             SYSTEM_ARGS="BUILD_DESKTOP=no BUILD_MINIMAL=yes"
@@ -92,10 +101,8 @@ jobs:
           fi
           echo "BUILD_ARGS=$SYSTEM_ARGS" >> $GITHUB_ENV
 
-      - name: Build [ ${{ inputs.board }} ]
+      - name: Build [ ${{ inputs.board }} - ${{ inputs.branch }} - ${{ inputs.release }} - ${{ inputs.system }} ]
         run: |
-          set -x
-
           echo "env.BUILD_ARGS: ${{ env.BUILD_ARGS }}"
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
