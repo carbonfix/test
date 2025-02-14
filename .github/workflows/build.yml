@@ -88,13 +88,14 @@ jobs:
             echo "Setting up for desktop system..."
             SYSTEM_ARGS="BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ inputs.desktop }} \
                   DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
-                  DESKTOP_APPGROUPS_SELECTED='${{ env.DESKTOP_APPGROUPS }}'"
+                  DESKTOP_APPGROUPS_SELECTED=\"${{ env.DESKTOP_APPGROUPS }}\""
           fi
           echo "BUILD_ARGS=$SYSTEM_ARGS" >> $GITHUB_ENV
 
       - name: Build [ ${{ inputs.board }} ]
         run: |
           set -x
+
           echo "env.BUILD_ARGS: ${{ env.BUILD_ARGS }}"
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
