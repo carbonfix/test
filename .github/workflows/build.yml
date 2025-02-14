@@ -3,15 +3,18 @@ name: Build
 on:
   workflow_dispatch:
     inputs:
+
       board:
-        description: 'Target board'
+        description: 'Target Board'
         required: true
         type: choice
         options:
           - all
           - rockchip-sapphire
+          - nanopim4v2
           - rock-4b
         default: "all"
+
       release:
         description: 'Release Version'
         required: true
@@ -21,6 +24,28 @@ on:
           - jammy
           - noble
         default: bookworm
+
+      system:
+        description: 'System Type'
+        required: true
+        type: choice
+        options:
+          - minimal
+          - server
+          - desktop
+        default: minimal
+
+      desktop:
+        if: ${{ github.event.inputs.system == 'desktop' }}
+        description: 'Desktop Type'
+        required: true
+        type: choice
+        options:
+          - xfce
+          - cinnamon
+          - gnome
+          - i3-wm
+        default: xfce
 
 jobs:
   build:
@@ -50,12 +75,27 @@ jobs:
         run: |
           cp -rvf userpatches build/
 
+      - name: Set up system type
+        run: |
+          if [ "${{ github.event.inputs.system }}" == "minimal" ]; then
+            echo "Setting up for minimal system..."
+            echo "SYSTEM_ARGS='BUILD_DESKTOP=no BUILD_MINIMAL=yes'" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.system }}" == "server" ]; then
+            echo "Setting up for server system..."
+            echo "SYSTEM_ARGS='BUILD_DESKTOP=no BUILD_MINIMAL=no'" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.system }}" == "desktop" ]; then
+            echo "Setting up for desktop system..."
+            echo "SYSTEM_ARGS='BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ github.event.inputs.desktop }} \
+                  DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
+                  DESKTOP_APPGROUPS_SELECTED=\"browsers chat desktop_tools editors email internet multimedia office programming remote_desktop\"'" >> $GITHUB_ENV
+          fi
+
       - name: Build [ ${{ inputs.board }} ]
         run: |
           pushd build
           ./compile.sh build BOARD=${{ inputs.board }} \
           BRANCH=current \
-          BUILD_DESKTOP=no BUILD_MINIMAL=yes \
+          $SYSTEM_ARGS \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ inputs.release }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz
@@ -74,7 +114,7 @@ jobs:
         uses: ncipollo/release-action@main
         if: success()
         with:
-          tag: "test_${{ env.buildtime }}"
+          tag: "${{ inputs.release }}_${{ env.buildtime }}"
           artifacts: "${{ github.workspace }}/build/output/images/*"
           allowUpdates: true
           removeArtifacts: false
