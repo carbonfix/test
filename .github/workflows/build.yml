@@ -75,7 +75,7 @@ jobs:
 
       - name: Set up system type
         env:
-          APPGROUPS: ${{ "\'browsers chat desktop_tools editors email internet multimedia office programming remote_desktop\'" }}
+          DESKTOP_APPGROUPS: ${{ "browsers chat desktop_tools editors email internet multimedia office programming remote_desktop" }}
         run: |
           set -x
           if [ "${{ inputs.system }}" == "minimal" ]; then
@@ -88,7 +88,7 @@ jobs:
             echo "Setting up for desktop system..."
             SYSTEM_ARGS="BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ inputs.desktop }} \
                   DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
-                  DESKTOP_APPGROUPS_SELECTED=${APPGROUPS}" >> $GITHUB_ENV
+                  DESKTOP_APPGROUPS_SELECTED=${DESKTOP_APPGROUPS}" >> $GITHUB_ENV
           fi
           echo "BUILD_ARGS=${SYSTEM_ARGS}" >> $GITHUB_ENV
 
