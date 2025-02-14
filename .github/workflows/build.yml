@@ -36,7 +36,7 @@ on:
         default: minimal
 
       desktop:
-        description: 'Desktop Type (only applicable if system is desktop)'
+        description: 'Desktop Type (if system is desktop)'
         required: false
         type: choice
         options:
@@ -86,7 +86,7 @@ jobs:
             echo "Setting up for desktop system..."
             echo "SYSTEM_ARGS=BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ inputs.desktop }} \
                   DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
-                  DESKTOP_APPGROUPS_SELECTED='browsers chat desktop_tools editors email internet multimedia office programming remote_desktop'" >> $GITHUB_ENV
+                  DESKTOP_APPGROUPS_SELECTED=\'browsers chat desktop_tools editors email internet multimedia office programming remote_desktop\'" >> $GITHUB_ENV
           fi
 
       - name: Build [ ${{ inputs.board }} ]
