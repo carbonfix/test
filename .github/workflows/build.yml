@@ -95,7 +95,7 @@ jobs:
       - name: Build [ ${{ inputs.board }} ]
         run: |
           set -x
-          echo "BUILD_ARGS: ${BUILD_ARGS}"
+          echo "env.BUILD_ARGS: ${{ env.BUILD_ARGS }}"
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
           BRANCH=current \
