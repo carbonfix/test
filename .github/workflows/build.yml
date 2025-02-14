@@ -84,9 +84,7 @@ jobs:
             echo "SYSTEM_ARGS=BUILD_DESKTOP=no BUILD_MINIMAL=no" >> $GITHUB_ENV
           elif [ "${{ inputs.system }}" == "desktop" ]; then
             echo "Setting up for desktop system..."
-            echo "SYSTEM_ARGS=BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ inputs.desktop }} \
-                  DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
-                  DESKTOP_APPGROUPS_SELECTED=\'browsers chat desktop_tools editors email internet multimedia office programming remote_desktop\'" >> $GITHUB_ENV
+            echo "SYSTEM_ARGS=BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ inputs.desktop }} DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base DESKTOP_APPGROUPS_SELECTED='browsers chat desktop_tools editors email internet multimedia office programming remote_desktop'" >> $GITHUB_ENV
           fi
 
       - name: Build [ ${{ inputs.board }} ]
