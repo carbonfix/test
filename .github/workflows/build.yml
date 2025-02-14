@@ -99,7 +99,7 @@ jobs:
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
           BRANCH=current \
-          $BUILD_ARGS \
+          ${{ env.BUILD_ARGS }} \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ inputs.release }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz
