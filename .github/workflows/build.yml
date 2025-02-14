@@ -91,10 +91,11 @@ jobs:
 
       - name: Build [ ${{ inputs.board }} ]
         run: |
+          echo "SYSTEM_ARGS: ${SYSTEM_ARGS}"
           pushd build
           ./compile.sh build BOARD=${{ inputs.board }} \
           BRANCH=current \
-          $SYSTEM_ARGS \
+          ${SYSTEM_ARGS} \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ inputs.release }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz
