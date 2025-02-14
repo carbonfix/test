@@ -9,11 +9,10 @@ on:
         required: true
         type: choice
         options:
-          - all
           - rockchip-sapphire
           - nanopim4v2
           - rock-4b
-        default: "all"
+        default: "nanopim4v2"
 
       release:
         description: 'Release Version'
@@ -86,12 +85,13 @@ jobs:
             echo "Setting up for desktop system..."
             SYSTEM_ARGS="BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ inputs.desktop }} \
                   DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
-                  DESKTOP_APPGROUPS_SELECTED='browsers\ chat\ desktop_tools\ editors\ email\ internet\ multimedia\ office\ programming\ remote_desktop'" >> $GITHUB_ENV
+                  DESKTOP_APPGROUPS_SELECTED='browsers chat desktop_tools editors email internet multimedia office programming remote_desktop'" >> $GITHUB_ENV
           fi
           echo "BUILD_ARGS=${SYSTEM_ARGS}" >> $GITHUB_ENV
 
       - name: Build [ ${{ inputs.board }} ]
         run: |
+          set -x
           echo "BUILD_ARGS: ${BUILD_ARGS}"
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
