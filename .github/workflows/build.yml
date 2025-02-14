@@ -14,16 +14,6 @@ on:
           - rock-4b
         default: "nanopim4v2"
 
-      release:
-        description: 'Release Version'
-        required: true
-        type: choice
-        options:
-          - bookworm
-          - jammy
-          - noble
-        default: bookworm
-
       branch:
         description: 'Branch'
         required: true
@@ -33,6 +23,16 @@ on:
           - edge
           - vendor
         default: current
+
+      release:
+        description: 'Release Version'
+        required: true
+        type: choice
+        options:
+          - bookworm
+          - jammy
+          - noble
+        default: bookworm
 
       system:
         description: 'System Type'
