@@ -36,7 +36,7 @@ on:
         default: minimal
 
       desktop:
-        if: ${{ github.event.inputs.system == 'desktop' }}
+        if: ${{ inputs.system == 'desktop' }}
         description: 'Desktop Type'
         required: true
         type: choice
@@ -77,15 +77,15 @@ jobs:
 
       - name: Set up system type
         run: |
-          if [ "${{ github.event.inputs.system }}" == "minimal" ]; then
+          if [ "${{ inputs.system }}" == "minimal" ]; then
             echo "Setting up for minimal system..."
             echo "SYSTEM_ARGS='BUILD_DESKTOP=no BUILD_MINIMAL=yes'" >> $GITHUB_ENV
-          elif [ "${{ github.event.inputs.system }}" == "server" ]; then
+          elif [ "${{ inputs.system }}" == "server" ]; then
             echo "Setting up for server system..."
             echo "SYSTEM_ARGS='BUILD_DESKTOP=no BUILD_MINIMAL=no'" >> $GITHUB_ENV
-          elif [ "${{ github.event.inputs.system }}" == "desktop" ]; then
+          elif [ "${{ inputs.system }}" == "desktop" ]; then
             echo "Setting up for desktop system..."
-            echo "SYSTEM_ARGS='BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ github.event.inputs.desktop }} \
+            echo "SYSTEM_ARGS='BUILD_DESKTOP=yes BUILD_MINIMAL=no DESKTOP_ENVIRONMENT=${{ inputs.desktop }} \
                   DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base \
                   DESKTOP_APPGROUPS_SELECTED=\"browsers chat desktop_tools editors email internet multimedia office programming remote_desktop\"'" >> $GITHUB_ENV
           fi
