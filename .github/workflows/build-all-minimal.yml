@@ -1,7 +1,27 @@
 name: build-all-minimal
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+
+      branch:
+        description: 'Branch'
+        required: true
+        type: choice
+        options:
+          - current
+          - edge
+          - vendor
+        default: current
+
+      regional:
+        description: 'Regional mirror'
+        required: true
+        type: choice
+        options:
+          - china
+          - global
+        default: china
 
 jobs:
   build:
@@ -42,15 +62,26 @@ jobs:
         run: |
           cp -rvf userpatches build/
 
-      - name: Build [ ${{ matrix.board }} - ${{ matrix.release }} ]
+      - name: Set up env
         run: |
-          echo "SYSTEM_ARGS: ${SYSTEM_ARGS}"
+          if [ "${{ inputs.regional }}" == "china" ]; then
+            echo "Setting up for regional china..."
+            echo "regional_mirror='china'" >> $GITHUB_ENV
+          else
+            echo "Setting up for regional global..."
+            echo "regional_mirror=''" >> $GITHUB_ENV
+          fi
+
+      - name: Build [ ${{ matrix.board }} - ${{ matrix.release }} - ${{ inputs.branch }} - ${{ inputs.regional }} ]
+        run: |
+          echo "regional_mirror: ${{ env.regional_mirror }}"
           pushd build
           ./compile.sh build BOARD=${{ matrix.board }} \
-          BRANCH=current \
+          BRANCH=${{ inputs.branch }} \
           BUILD_DESKTOP=no BUILD_MINIMAL=yes \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ matrix.release }} \
+          REGIONAL_MIRROR=${{ env.regional_mirror }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz
           popd
 
@@ -67,7 +98,7 @@ jobs:
         uses: ncipollo/release-action@main
         if: success()
         with:
-          tag: "${{ matrix.release }}_${{ env.buildtime }}"
+          tag: "${{ inputs.regional }}_${{ matrix.release }}_${{ inputs.branch }}_${{ env.buildtime }}"
           artifacts: "${{ github.workspace }}/build/output/images/*"
           allowUpdates: true
           removeArtifacts: false

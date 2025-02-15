@@ -101,12 +101,12 @@ jobs:
           fi
           echo "BUILD_ARGS=$SYSTEM_ARGS" >> $GITHUB_ENV
 
-      - name: Build [ ${{ inputs.board }} - ${{ inputs.branch }} - ${{ inputs.release }} - ${{ inputs.system }} ]
+      - name: Build [ ${{ inputs.board }} - ${{ inputs.release }} - ${{ inputs.branch }} - ${{ inputs.system }} ]
         run: |
           echo "env.BUILD_ARGS: ${{ env.BUILD_ARGS }}"
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
-          BRANCH=current \
+          BRANCH=${{ inputs.branch }} \
           ${{ env.BUILD_ARGS }} \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ inputs.release }} \
