@@ -1,0 +1,84 @@
+name: Build
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        board:
+          - rockchip-sapphire
+          - nanopim4v2
+          - rock-4b
+        release:
+          - bookworm
+          - jammy
+          - noble
+
+    steps:
+      - name: Install required packages
+        run: |
+          sudo apt update
+          sudo apt install -y neofetch
+
+      - name: Show host info
+        run: |
+          lscpu
+          free -h
+          df -hT ${PWD}
+          neofetch
+
+      - name: Checkout targets
+        uses: actions/checkout@v4
+
+      - name: Checkout armbian
+        run: |
+          git clone -q --single-branch --depth=1 --branch=main https://github.com/armbian/build.git
+
+      - name: Copy targets
+        run: |
+          cp -rvf userpatches build/
+
+      - name: Build [ ${{ matrix.board }} - ${{ matrix.release }} ]
+        run: |
+          echo "SYSTEM_ARGS: ${SYSTEM_ARGS}"
+          pushd build
+          ./compile.sh build BOARD=${{ matrix.board }} \
+          BRANCH=current \
+          BUILD_DESKTOP=no BUILD_MINIMAL=yes \
+          KERNEL_CONFIGURE=no \
+          RELEASE=${{ matrix.release }} \
+          COMPRESS_OUTPUTIMAGE=sha,img,xz
+          popd
+
+      - name: Show remaining space
+        run: |
+          df -hT ${PWD}
+
+      - name: Show images
+        run: |
+          ls -lh ${{ github.workspace }}/build/output/images
+          echo "buildtime=$(date +"%Y.%m")" >> $GITHUB_ENV
+
+      - name: Upload images
+        uses: ncipollo/release-action@main
+        if: success()
+        with:
+          tag: "${{ matrix.release }}_${{ env.buildtime }}"
+          artifacts: "${{ github.workspace }}/build/output/images/*"
+          allowUpdates: true
+          removeArtifacts: false
+          replacesArtifacts: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            ### Armbian Image information
+            - Default username: root
+            - Default password: 1234
+            - Config command: armbian-config
+            - Upgrade command: armbian-upgrade
+            - Install command: armbian-install
+          draft: false
+          prerelease: false
