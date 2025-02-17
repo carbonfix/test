@@ -1,4 +1,4 @@
-name: build-all-minimal
+name: build-all-server
 
 on:
   workflow_dispatch:
