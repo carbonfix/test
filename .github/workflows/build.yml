@@ -125,10 +125,13 @@ jobs:
             echo "BUILD_TAG=" >> $GITHUB_ENV
           fi
 
-      - name: Build [ ${{ inputs.board }} - ${{ inputs.release }} - ${{ inputs.branch }} - ${{ inputs.system }} ]
+      - name: Show environment
         run: |
           echo "env.BUILD_ARGS: ${{ env.BUILD_ARGS }}"
+          echo "env.BUILD_TAG: ${{ env.BUILD_TAG }}"
 
+      - name: Build [ ${{ inputs.board }} - ${{ inputs.release }} - ${{ inputs.branch }} - ${{ inputs.system }} ]
+        run: |
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
           BRANCH=${{ inputs.branch }} \
