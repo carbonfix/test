@@ -70,8 +70,8 @@ jobs:
           BUILD_DESKTOP=no BUILD_MINIMAL=yes \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ matrix.release }} \
-          COMPRESS_OUTPUTIMAGE=sha,img,xz
-          VENDOR=${{ inputs.vendor }} \
+          COMPRESS_OUTPUTIMAGE=sha,img,xz \
+          VENDOR=${{ inputs.vendor }}
           popd
 
       - name: Show remaining space

@@ -12,7 +12,7 @@ on:
           - rockchip-sapphire
           - nanopim4v2
           - rock-4b
-        default: "nanopim4v2"
+        default: "rockchip-sapphire"
 
       branch:
         description: 'Branch'
@@ -54,6 +54,24 @@ on:
           - gnome
           - i3-wm
         default: xfce
+
+      vendor:
+        description: 'Vendor'
+        required: false
+        type: choice
+        options:
+          - Armbian
+          - Armbian-unofficial
+        default: Armbian-unofficial
+
+      suffix:
+        description: 'Tag suffix'
+        required: false
+        type: choice
+        options:
+          - test
+          - ''
+        default: test
 
 jobs:
   build:
@@ -101,16 +119,24 @@ jobs:
           fi
           echo "BUILD_ARGS=$SYSTEM_ARGS" >> $GITHUB_ENV
 
+          if [ "${{ inputs.suffix }}" == "test" ]; then
+            echo "BUILD_TAG=_test" >> $GITHUB_ENV
+          else
+            echo "BUILD_TAG=" >> $GITHUB_ENV
+          fi
+
       - name: Build [ ${{ inputs.board }} - ${{ inputs.release }} - ${{ inputs.branch }} - ${{ inputs.system }} ]
         run: |
           echo "env.BUILD_ARGS: ${{ env.BUILD_ARGS }}"
+
           pushd build
           bash ./compile.sh build BOARD=${{ inputs.board }} \
           BRANCH=${{ inputs.branch }} \
           ${{ env.BUILD_ARGS }} \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ inputs.release }} \
-          COMPRESS_OUTPUTIMAGE=sha,img,xz
+          COMPRESS_OUTPUTIMAGE=sha,img,xz \
+          VENDOR=${{ inputs.vendor }}
           popd
 
       - name: Show remaining space
@@ -126,7 +152,7 @@ jobs:
         uses: ncipollo/release-action@main
         if: success()
         with:
-          tag: "${{ inputs.release }}_${{ env.buildtime }}"
+          tag: "${{ inputs.vendor }}_${{ matrix.release }}_${{ inputs.branch }}_${{ env.buildtime }}${{ env.BUILD_TAG }}"
           artifacts: "${{ github.workspace }}/build/output/images/*"
           allowUpdates: true
           removeArtifacts: false
