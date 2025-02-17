@@ -14,14 +14,14 @@ on:
           - vendor
         default: current
 
-      regional:
-        description: 'Regional mirror'
-        required: true
+      vendor:
+        description: 'Vendor'
+        required: false
         type: choice
         options:
-          - china
-          - global
-        default: china
+          - Armbian
+          - Armbian-unofficial
+        default: Armbian-unofficial
 
 jobs:
   build:
@@ -62,27 +62,16 @@ jobs:
         run: |
           cp -rvf userpatches build/
 
-      - name: Set up env
+      - name: Build [ ${{ matrix.board }} - ${{ matrix.release }} - ${{ inputs.branch }} ]
         run: |
-          if [ "${{ inputs.regional }}" == "china" ]; then
-            echo "Setting up for regional china..."
-            echo "regional_mirror='china'" >> $GITHUB_ENV
-          else
-            echo "Setting up for regional global..."
-            echo "regional_mirror=''" >> $GITHUB_ENV
-          fi
-
-      - name: Build [ ${{ matrix.board }} - ${{ matrix.release }} - ${{ inputs.branch }} - ${{ inputs.regional }} ]
-        run: |
-          echo "regional_mirror: ${{ env.regional_mirror }}"
           pushd build
           ./compile.sh build BOARD=${{ matrix.board }} \
           BRANCH=${{ inputs.branch }} \
           BUILD_DESKTOP=no BUILD_MINIMAL=yes \
           KERNEL_CONFIGURE=no \
           RELEASE=${{ matrix.release }} \
-          REGIONAL_MIRROR=${{ env.regional_mirror }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz
+          VENDOR=${{ inputs.vendor }} \
           popd
 
       - name: Show remaining space
@@ -98,7 +87,7 @@ jobs:
         uses: ncipollo/release-action@main
         if: success()
         with:
-          tag: "${{ inputs.regional }}_${{ matrix.release }}_${{ inputs.branch }}_${{ env.buildtime }}"
+          tag: "${{ inputs.vendor }}_${{ matrix.release }}_${{ inputs.branch }}_${{ env.buildtime }}"
           artifacts: "${{ github.workspace }}/build/output/images/*"
           allowUpdates: true
           removeArtifacts: false
