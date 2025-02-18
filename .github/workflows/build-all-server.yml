@@ -57,15 +57,20 @@ jobs:
       - name: Install required packages
         run: |
           sudo apt update
-          sudo apt install -y neofetch duf
+          sudo apt install -y neofetch
 
       - name: Show host info
         run: |
+          neofetch --off --color_blocks off --stdout
+
+          echo -e "\033[32mCPU info:\033[0m"
           lscpu
+
+          echo -e "\033[32mMemory info:\033[0m"
           free -h
+
+          echo -e "\033[32mDisk space info:\033[0m"
           df -hT ${PWD}
-          neofetch
-          duf
 
       - name: Checkout targets
         uses: actions/checkout@v4
@@ -93,7 +98,6 @@ jobs:
       - name: Show remaining space
         run: |
           df -hT ${PWD}
-          duf
 
       - name: Show images
         run: |
