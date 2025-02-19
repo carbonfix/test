@@ -39,6 +39,21 @@ jobs:
           - noble
 
     steps:
+
+      - name: Free disk space
+        run: |
+          echo "Disk space before cleanup:"
+          df -h
+          sudo rm -rf /usr/local/.ghcup
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/local/lib/android/sdk/ndk
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/share/boost
+          sudo apt-get clean
+          echo "Disk space after cleanup:"
+          df -h
+
       - name: Install required packages
         run: |
           sudo apt update
@@ -46,10 +61,16 @@ jobs:
 
       - name: Show host info
         run: |
+          neofetch --off --color_blocks off --stdout
+
+          echo -e "\033[32mCPU info:\033[0m"
           lscpu
+
+          echo -e "\033[32mMemory info:\033[0m"
           free -h
+
+          echo -e "\033[32mDisk space info:\033[0m"
           df -hT ${PWD}
-          neofetch
 
       - name: Checkout targets
         uses: actions/checkout@v4
