@@ -14,6 +14,15 @@ on:
           - vendor
         default: current
 
+      bspfreeze:
+        description: 'Freeze BSP'
+        required: false
+        type: choice
+        options:
+          - yes
+          - no
+        default: yes
+
       vendor:
         description: 'Vendor'
         required: false
@@ -21,7 +30,7 @@ on:
         options:
           - Armbian
           - Armbian-unofficial
-        default: Armbian-unofficial
+        default: Armbian
 
 jobs:
   build:
@@ -92,6 +101,7 @@ jobs:
           KERNEL_CONFIGURE=no \
           RELEASE=${{ matrix.release }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz \
+          BSPFREEZE=${{ inputs.bspfreeze }} \
           VENDOR=${{ inputs.vendor }}
           popd
 

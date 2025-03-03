@@ -1,4 +1,4 @@
-name: build
+name: build-single
 
 on:
   workflow_dispatch:
@@ -54,6 +54,15 @@ on:
           - gnome
           - i3-wm
         default: xfce
+
+      bspfreeze:
+        description: 'Freeze BSP'
+        required: false
+        type: choice
+        options:
+          - yes
+          - no
+        default: yes
 
       vendor:
         description: 'Vendor'
@@ -160,6 +169,7 @@ jobs:
           KERNEL_CONFIGURE=no \
           RELEASE=${{ inputs.release }} \
           COMPRESS_OUTPUTIMAGE=sha,img,xz \
+          BSPFREEZE=${{ inputs.bspfreeze }} \
           VENDOR=${{ inputs.vendor }}
           popd
 
