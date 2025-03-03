@@ -19,9 +19,9 @@ on:
         required: false
         type: choice
         options:
-          - yes
-          - no
-        default: yes
+          - 'yes'
+          - 'no'
+        default: 'yes'
 
       vendor:
         description: 'Vendor'
